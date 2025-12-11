@@ -336,7 +336,7 @@ class TelegramLogger:
         if chat.id:
             parts.append(code(chat.id))
         if getattr(chat, 'language_code', None):
-            parts.append(f'[{chat.language_code}]')
+            parts.append(bold(f'({chat.language_code})'))
         return ' '.join(parts)
 
     @staticmethod
@@ -415,7 +415,9 @@ class TelegramLogger:
         """Generates the log header and body for a message."""
         message_body, forwarded_from = None, None
         action_date = message.date if include_details else datetime.now(timezone.utc)
-        header_parts = [f'{self.get_header(message.chat, action_date)}:']
+
+        entity = from_user if message.chat.type == 'private' and from_user else message.chat
+        header_parts = [f'{self.get_header(entity, action_date)}:']
 
         if isinstance(message, types.Message):
             if isinstance(message.forward_origin, types.MessageOriginChat):
