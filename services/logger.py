@@ -335,6 +335,8 @@ class TelegramLogger:
             parts.append(f'[@{chat.username}]')
         if chat.id:
             parts.append(code(chat.id))
+        if getattr(chat, 'language_code', None):
+            parts.append(f'[{chat.language_code}]')
         return ' '.join(parts)
 
     @staticmethod

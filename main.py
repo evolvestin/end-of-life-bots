@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from aiogram import Bot, Dispatcher, Router, types
 
-from services.config import ALLOWED_UPDATES, END_OF_LIFE_MESSAGE, ID_DEV, TOKENS, dev_bot
+from services.config import ALLOWED_UPDATES, END_OF_LIFE_MESSAGES, ID_DEV, TOKENS, dev_bot
 from services.error_handler import TelegramError
 from services.functions import bold, code, html_secure
 from services.logger import TelegramLogger
@@ -26,7 +26,15 @@ async def all_messages_handler(message: types.Message, bot: Bot) -> None:
         asyncio.create_task(logger.log_message(message))
     if message.chat.id < 0:
         return
-    await message.answer(text=END_OF_LIFE_MESSAGE, parse_mode='HTML')
+
+    language_code = message.from_user.language_code if message.from_user else 'en'
+    text = END_OF_LIFE_MESSAGES.get(language_code, END_OF_LIFE_MESSAGES['en'])
+
+    await message.answer(
+        text=text,
+        parse_mode='HTML',
+        reply_markup=types.ReplyKeyboardRemove(),
+    )
 
 
 async def chat_member_handler(event: types.ChatMemberUpdated, bot: Bot) -> None:
