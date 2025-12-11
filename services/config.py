@@ -42,14 +42,15 @@ ALLOWED_UPDATES = [
 ]
 
 END_OF_LIFE_MESSAGE = (
-    '<b>Уведомление о прекращении обслуживания</b>\n\n'
-    'Настоящим уведомляем, что эксплуатация и техническая поддержка данного программного обеспечения (бота) '
-    'были полностью и окончательно прекращены.\n'
-    'Решение о выводе системы из эксплуатации принято в связи с отсутствием фактической востребованности функционала '
-    'и целесообразности дальнейшего расходования ресурсов на администрирование.\n'
-    'На текущий момент все автоматизированные процессы остановлены, базы данных заархивированы или удалены, '
-    'а серверные мощности перераспределены. '
-    'Обработка входящих запросов, команд и сообщений более не производится и производиться не будет.\n'
-    'По всем вопросам, касающимся архивных данных или причин прекращения работы, '
-    f'вы можете направить официальный запрос администратору проекта: {os.getenv("LINK_TO_ADMIN")}.'
+    '<b>End of Service Notification</b>\n\n'
+    'Please be advised that the operation and technical support for this software (bot) '
+    'have been fully and permanently discontinued.\n'
+    'The decision to decommission the system was reached due to the lack of actual demand '
+    'for its functionality and the absence of justification for further resource allocation '
+    'towards its administration.\n'
+    'Effective immediately, all automated processes have been halted, databases have been archived or deleted, '
+    'and server capacity has been reallocated. '
+    'Incoming requests, commands, and messages are no longer being processed and will not be addressed.\n'
+    'For any inquiries regarding archived data or the rationale behind the service termination, '
+    f'you may submit a formal request to the project administrator: {os.getenv("LINK_TO_ADMIN")}.'
 )

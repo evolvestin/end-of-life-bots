@@ -37,5 +37,7 @@ def blockquote(text: Any, expandable: bool = False) -> str:
 def html_secure(text: Any, reverse: bool = False) -> str:
     """Escapes or unescapes HTML special characters in the given text."""
     for pattern, value in ESCAPE_SEQUENCES.items():
-        text = re.sub(pattern, value, str(text)) if not reverse else re.sub(value, pattern, str(text))
+        text = (
+            re.sub(pattern, value, str(text)) if not reverse else re.sub(value, pattern, str(text))
+        )
     return text

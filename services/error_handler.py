@@ -49,7 +49,9 @@ class TelegramError:
 
         if message:
             caption = f'{title}{code(error)}' if 0 < len_error_text <= 1024 else None
-            file_name = f'error_report_{datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")}.json'
+            file_name = (
+                f'error_report_{datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")}.json'
+            )
             file = types.BufferedInputFile(str(message).encode('utf-16'), filename=file_name)
             response = await self.dev_bot.send_document(
                 chat_id=self.dev_chat_id, document=file, caption=caption, parse_mode='HTML'
@@ -85,5 +87,9 @@ class TelegramError:
         except Exception as short_error:
             more_error, _ = extract_error_details()
             error_text = f'FIRST ERROR:\n\n{error}\n\nMORE SHORT ERROR: {short_error}\nMORE ERROR:\n\n{more_error}'
-            file = types.BufferedInputFile(error_text.encode('utf-16'), filename='error_report_fatal.json')
-            await self.dev_bot.send_document(chat_id=self.dev_chat_id, document=file, caption='FATAL ERROR #fatal')
+            file = types.BufferedInputFile(
+                error_text.encode('utf-16'), filename='error_report_fatal.json'
+            )
+            await self.dev_bot.send_document(
+                chat_id=self.dev_chat_id, document=file, caption='FATAL ERROR #fatal'
+            )

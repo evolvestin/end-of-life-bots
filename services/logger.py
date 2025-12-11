@@ -23,7 +23,15 @@ class EntitiesToHTML:
             else:
                 return '<pre>', '</pre>'
 
-        if entity.type in ['url', 'email', 'cashtag', 'hashtag', 'mention', 'phone_number', 'text_mention']:
+        if entity.type in [
+            'url',
+            'email',
+            'cashtag',
+            'hashtag',
+            'mention',
+            'phone_number',
+            'text_mention',
+        ]:
             return '', ''
 
         html_tags_by_type = {
@@ -185,7 +193,9 @@ class ProcessMessage:
         if self.message.photo:
             return self.message.photo[-1].file_id, f'{bold("Отправил фото")} #photo'
         elif self.message.new_chat_photo:
-            return self.message.new_chat_photo[-1].file_id, f'{bold("Изменил аватар чата")} #new_chat_photo'
+            return self.message.new_chat_photo[
+                -1
+            ].file_id, f'{bold("Изменил аватар чата")} #new_chat_photo'
         elif self.message.animation:
             return self.message.animation.file_id, f'{bold("Отправил анимацию")} #gif #animation'
         elif self.message.document:
@@ -197,17 +207,29 @@ class ProcessMessage:
         elif self.message.video:
             return self.message.video.file_id, f'{bold("Отправил видео")} #video'
         elif self.message.video_note:
-            return self.message.video_note.file_id, f'{bold("Отправил видео-сообщение")} #video_note'
+            return (
+                self.message.video_note.file_id,
+                f'{bold("Отправил видео-сообщение")} #video_note',
+            )
         elif self.message.sticker:
             return self.message.sticker.file_id, f'{bold("Отправил стикер")} #sticker'
         elif self.message.paid_media:
-            return None, f'{bold(f"Отправил платный медиа")} за {self.message.paid_media.star_count}⭐ #paid_media'
+            return (
+                None,
+                f'{bold(f"Отправил платный медиа")} за {self.message.paid_media.star_count}⭐ #paid_media',
+            )
         elif self.message.story:
             return None, f'{bold("Опубликовал историю")} #story'
         elif self.message.dice:
-            return None, f'{bold("Отправил дайс")} {self.message.dice.emoji}: {self.message.dice.value} #dice'
+            return (
+                None,
+                f'{bold("Отправил дайс")} {self.message.dice.emoji}: {self.message.dice.value} #dice',
+            )
         elif self.message.poll:
-            return None, f'Создал {bold("викторину" if self.message.poll.type == "quiz" else "голосование")} #poll'
+            return (
+                None,
+                f'Создал {bold("викторину" if self.message.poll.type == "quiz" else "голосование")} #poll',
+            )
         elif self.message.location:
             return None, f'{bold("Отправил локацию")} #location'
         elif self.message.venue:
@@ -246,9 +268,7 @@ class ProcessMessage:
         elif self.message.migrate_to_chat_id:
             return f'{bold("Чат деактивирован:")} #chat_upgrade\nНовый ID: {code(self.message.migrate_to_chat_id)}'
         elif self.message.migrate_from_chat_id:
-            return (
-                f'{bold("Чат стал супергруппой:")} #chat_upgraded\nСтарый ID: {code(self.message.migrate_from_chat_id)}'
-            )
+            return f'{bold("Чат стал супергруппой:")} #chat_upgraded\nСтарый ID: {code(self.message.migrate_from_chat_id)}'
         elif self.message.forum_topic_created:
             return f'{bold("Создал тему форума")} #forum_topic_created'
         elif self.message.forum_topic_edited:
@@ -377,7 +397,10 @@ class TelegramLogger:
             header = '\n'.join([f'{self.get_header(self.me)}:'] + header_parts)
             try:
                 await self.bot.send_message(
-                    chat_id=ID_MEDIA, text=blockquote(header), reply_to_message_id=media.message_id, parse_mode='HTML'
+                    chat_id=ID_MEDIA,
+                    text=blockquote(header),
+                    reply_to_message_id=media.message_id,
+                    parse_mode='HTML',
                 )
             except Exception:
                 pass
@@ -400,7 +423,9 @@ class TelegramLogger:
             elif isinstance(message.forward_origin, types.MessageOriginChannel):
                 forwarded_from = message.forward_origin.chat
             elif isinstance(message.forward_origin, types.MessageOriginHiddenUser):
-                forwarded_from = types.User(id=0, first_name=message.forward_origin.sender_user_name, is_bot=False)
+                forwarded_from = types.User(
+                    id=0, first_name=message.forward_origin.sender_user_name, is_bot=False
+                )
         else:
             include_details = False
             header_parts.append(f'{message.message_id} #inaccessible')
@@ -418,7 +443,9 @@ class TelegramLogger:
                     f' от {self.get_header(chat=forwarded_from, date=message.forward_date)}:'
                 )
             except Exception:
-                header_parts.append(f'Форвард от {self.get_header(chat=forwarded_from)} (не удалось сохранить):')
+                header_parts.append(
+                    f'Форвард от {self.get_header(chat=forwarded_from)} (не удалось сохранить):'
+                )
 
         if include_details:
             if message.pinned_message:
@@ -438,7 +465,9 @@ class TelegramLogger:
                 if action:
                     header_parts.append(action)
                 else:
-                    header_parts, message_body = await self.process_media_message(message, header_parts)
+                    header_parts, message_body = await self.process_media_message(
+                        message, header_parts
+                    )
         header = '\n'.join(header_parts)
         return header, message_body
 
@@ -472,9 +501,13 @@ class TelegramLogger:
         try:
             if len(text) > 4096:
                 for chunk in [text[i : i + 4096] for i in range(0, len(text), 4096)]:
-                    await self.bot.send_message(ID_LOGS, chunk, parse_mode='HTML', disable_web_page_preview=True)
+                    await self.bot.send_message(
+                        ID_LOGS, chunk, parse_mode='HTML', disable_web_page_preview=True
+                    )
             else:
-                await self.bot.send_message(ID_LOGS, text, parse_mode='HTML', disable_web_page_preview=True)
+                await self.bot.send_message(
+                    ID_LOGS, text, parse_mode='HTML', disable_web_page_preview=True
+                )
         except Exception as e:
             print(f'Logging error: {e}')
 
@@ -483,7 +516,9 @@ class TelegramLogger:
         if message.chat.id in [ID_LOGS, ID_MEDIA, ID_FORWARD]:
             return
 
-        log_header, log_body = await self.log_message_handler(message, message.from_user, include_details=True)
+        log_header, log_body = await self.log_message_handler(
+            message, message.from_user, include_details=True
+        )
         full_log = f'{self.get_header(self.me)}:\n{log_header}'
         if log_body:
             full_log += f'\n{log_body}'

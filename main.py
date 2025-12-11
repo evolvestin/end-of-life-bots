@@ -7,10 +7,14 @@ from aiogram import Bot, Dispatcher, Router, types
 
 from services.config import ALLOWED_UPDATES, END_OF_LIFE_MESSAGE, ID_DEV, TOKENS, dev_bot
 from services.error_handler import TelegramError
-from services.functions import code, bold, html_secure
+from services.functions import bold, code, html_secure
 from services.logger import TelegramLogger
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format='%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+logging.basicConfig(
+    level=logging.DEBUG,
+    stream=sys.stdout,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+)
 
 loggers: dict[int, TelegramLogger] = {}
 
